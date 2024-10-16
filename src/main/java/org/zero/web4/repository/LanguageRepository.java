@@ -31,7 +31,6 @@ public class LanguageRepository {
         return languageList;
     }
 
-
     public Language getLanguageById(Integer languageId) throws SQLException {
         var statement = database.getConnection()
                 .prepareStatement("select * from language where id = ?");

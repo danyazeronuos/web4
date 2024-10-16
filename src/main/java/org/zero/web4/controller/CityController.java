@@ -12,7 +12,7 @@ import org.zero.web4.service.CityService;
 import java.sql.SQLException;
 import java.util.List;
 
-@Path("/hello")
+@Path("/city")
 @ApplicationScoped
 public class CityController {
     @Inject
