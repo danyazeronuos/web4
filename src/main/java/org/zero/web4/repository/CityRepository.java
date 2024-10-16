@@ -24,11 +24,8 @@ public class CityRepository {
         var cityList = new ArrayList<City>();
 
         while (resultSet.next()) {
-            var cityId = resultSet.getInt(1);
-            var cityName = resultSet.getString(2);
-            var cityFoundationYear = resultSet.getShort(3);
-            var cityArea = resultSet.getShort(4);
-            cityList.add(new City(cityId, cityName, cityFoundationYear, cityArea));
+            var city = getCityFromResultSet(resultSet);
+            cityList.add(city);
         }
         statement.close();
 
@@ -42,11 +39,18 @@ public class CityRepository {
 
         var resultSet = statement.executeQuery();
         resultSet.next();
+
+        var city = getCityFromResultSet(resultSet);
+        statement.close();
+
+        return city;
+    }
+
+    public static City getCityFromResultSet(ResultSet resultSet) throws SQLException {
+        var cityId = resultSet.getInt(1);
         var cityName = resultSet.getString(2);
         var cityFoundationYear = resultSet.getShort(3);
         var cityArea = resultSet.getShort(4);
-
-        statement.close();
 
         return new City(cityId, cityName, cityFoundationYear, cityArea);
     }
