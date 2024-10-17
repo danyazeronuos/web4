@@ -46,6 +46,26 @@ public class CityRepository {
         return city;
     }
 
+    public void addCity(City city) throws SQLException {
+        var statement = database.getConnection()
+                .prepareStatement("insert into city(name, foundation_year, area) values(?, ?, ?)");
+        statement.setString(1, city.getName());
+        statement.setShort(2, city.getFoundationYear());
+        statement.setShort(3, city.getArea());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void deleteCity(Integer cityId) throws SQLException {
+        var statement = database.getConnection()
+                .prepareStatement("delete from city where id = ?");
+        statement.setInt(1, cityId);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
     public static City getCityFromResultSet(ResultSet resultSet) throws SQLException {
         var cityId = resultSet.getInt(1);
         var cityName = resultSet.getString(2);

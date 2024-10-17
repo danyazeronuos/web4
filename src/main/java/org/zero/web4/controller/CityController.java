@@ -2,11 +2,10 @@ package org.zero.web4.controller;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import org.zero.web4.entity.City;
+import org.zero.web4.model.CityDTO;
+import org.zero.web4.model.Identification;
 import org.zero.web4.service.CityService;
 
 import java.sql.SQLException;
@@ -29,5 +28,18 @@ public class CityController {
     @Produces("application/json")
     public City getCityById(@PathParam("cityId") Integer cityId) throws SQLException {
         return cityService.getCityById(cityId);
+    }
+
+    @DELETE
+    @Path("/{cityId}")
+    @Consumes("application/json")
+    public void deleteCity(@PathParam("cityId") Integer cityId) throws SQLException {
+        cityService.deleteCity(cityId);
+    }
+
+    @PUT
+    @Consumes("application/json")
+    public void addCity(CityDTO city) throws SQLException {
+        cityService.addCity(city);
     }
 }
