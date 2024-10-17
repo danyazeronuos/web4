@@ -2,6 +2,7 @@ package org.zero.web4.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.extern.log4j.Log4j2;
 import org.zero.web4.entity.Language;
 import org.zero.web4.mapper.LanguageMapper;
 import org.zero.web4.model.LanguageDTO;
@@ -20,7 +21,8 @@ public class LanguageService {
     }
 
     public Language getLanguageById(Integer languageId) throws SQLException {
-        return languageRepository.getLanguageById(languageId);
+        return languageRepository.getLanguageById(languageId)
+                .orElseThrow(() -> new IllegalArgumentException("Language entity with specified id not found"));
     }
 
     public void addLanguage(LanguageDTO language) throws SQLException {

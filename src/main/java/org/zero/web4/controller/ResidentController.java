@@ -2,11 +2,9 @@ package org.zero.web4.controller;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import org.zero.web4.entity.Resident;
+import org.zero.web4.model.ResidentDTO;
 import org.zero.web4.service.ResidentService;
 
 import java.sql.SQLException;
@@ -29,5 +27,11 @@ public class ResidentController {
     @Produces("application/json")
     public List<Resident> getResidentById() throws SQLException {
         return residentService.getAllResidentList();
+    }
+
+    @PUT
+    @Consumes("application/json")
+    public void addResident(ResidentDTO residentDTO) throws SQLException {
+        residentService.addResident(residentDTO);
     }
 }

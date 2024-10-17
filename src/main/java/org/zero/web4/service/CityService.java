@@ -1,9 +1,8 @@
 package org.zero.web4.service;
 
-import jakarta.ejb.Singleton;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.zero.web4.config.DatabaseConfig;
+import lombok.extern.log4j.Log4j2;
 import org.zero.web4.entity.City;
 import org.zero.web4.mapper.CityMapper;
 import org.zero.web4.model.CityDTO;
@@ -22,7 +21,8 @@ public class CityService {
     }
 
     public City getCityById(Integer cityId) throws SQLException {
-        return cityRepository.getCityById(cityId);
+        return cityRepository.getCityById(cityId)
+                .orElseThrow(() -> new IllegalArgumentException("City entity with specified id not found"));
     }
 
     public void addCity(CityDTO city) throws SQLException {
