@@ -57,6 +57,18 @@ public class CityRepository {
         statement.close();
     }
 
+    public void updateCity(City city) throws SQLException {
+        var statement = database.getConnection()
+                .prepareStatement("update city set name = ?, foundation_year = ?, area = ? where id = ?");
+        statement.setString(1, city.getName());
+        statement.setShort(2, city.getFoundationYear());
+        statement.setShort(3, city.getArea());
+        statement.setInt(4, city.getId());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
     public void deleteCity(Integer cityId) throws SQLException {
         var statement = database.getConnection()
                 .prepareStatement("delete from city where id = ?");
@@ -66,7 +78,7 @@ public class CityRepository {
         statement.close();
     }
 
-    public static City getCityFromResultSet(ResultSet resultSet) throws SQLException {
+    private static City getCityFromResultSet(ResultSet resultSet) throws SQLException {
         var cityId = resultSet.getInt(1);
         var cityName = resultSet.getString(2);
         var cityFoundationYear = resultSet.getShort(3);

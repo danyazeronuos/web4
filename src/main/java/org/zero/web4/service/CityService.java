@@ -34,4 +34,11 @@ public class CityService {
     public void deleteCity(Integer cityId) throws SQLException {
         cityRepository.deleteCity(cityId);
     }
+
+    public void updateCity(Integer cityId, CityDTO city) throws SQLException {
+        var mappedCity = CityMapper.map(city);
+        mappedCity.setId(cityId);
+
+        cityRepository.updateCity(mappedCity);
+    }
 }

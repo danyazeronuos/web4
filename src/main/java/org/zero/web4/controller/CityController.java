@@ -37,6 +37,13 @@ public class CityController {
         cityService.deleteCity(cityId);
     }
 
+    @PATCH
+    @Path("/{cityId}")
+    @Consumes("application/json")
+    public void updateCity(@PathParam("cityId") Integer cityId, CityDTO city) throws SQLException {
+        cityService.updateCity(cityId, city);
+    }
+
     @PUT
     @Consumes("application/json")
     public void addCity(CityDTO city) throws SQLException {

@@ -1,10 +1,10 @@
 package org.zero.web4.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.zero.web4.config.DatabaseConfig;
 import org.zero.web4.entity.Language;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +13,7 @@ import java.util.List;
 
 @ApplicationScoped
 public class LanguageRepository {
+    @Inject
     private DatabaseConfig database;
 
     public List<Language> getAllLanguageList() throws SQLException {
@@ -43,5 +44,33 @@ public class LanguageRepository {
         statement.close();
 
         return new Language(languageId, languageTitle);
+    }
+
+    public void updateLanguage(Language language) throws SQLException {
+        var statement = database.getConnection()
+                .prepareStatement("update language set title = ? where id = ?");
+        statement.setString(1, language.getTitle());
+        statement.setInt(2, language.getId());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void addLanguage(Language language) throws SQLException {
+        var statement = database.getConnection()
+                .prepareStatement("insert into language(title) values(?)");
+        statement.setString(1, language.getTitle());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void deleteLanguage(Integer languageId) throws SQLException {
+        var statement = database.getConnection()
+                .prepareStatement("delete from language where id = ?");
+        statement.setInt(1, languageId);
+
+        statement.executeUpdate();
+        statement.close();
     }
 }
