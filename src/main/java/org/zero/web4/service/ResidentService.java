@@ -2,7 +2,6 @@ package org.zero.web4.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.zero.web4.entity.Resident;
@@ -13,6 +12,7 @@ import org.zero.web4.repository.ResidentRepository;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class ResidentService {
@@ -25,14 +25,35 @@ public class ResidentService {
     private static final Logger log = LogManager.getLogger(ResidentService.class);
 
     public Resident getResidentById(Integer residentId) throws SQLException {
-        return residentRepository.getResidentById(residentId);
+        return residentRepository.getResidentById(residentId)
+                .orElseThrow(() -> {
+                    log.warn("Entity with this id -> {} does not exist!", residentId);
+                    return new IllegalArgumentException("Entity with this id does not exist!");
+                });
     }
 
     public List<Resident> getAllResidentList() throws SQLException {
         return residentRepository.getAllResidentList();
     }
 
+    public void deleteResident(Integer residentId) throws SQLException {
+        residentRepository.deleteResident(residentId);
+    }
+
     public void addResident(ResidentDTO residentDTO) throws SQLException {
+        var resident = this.getResidentWithFilledCityAndLanguage(residentDTO);
+
+        residentRepository.addResident(resident);
+    }
+
+    public void updateResident(Integer residentId, ResidentDTO residentDTO) throws SQLException {
+        var resident = this.getResidentWithFilledCityAndLanguage(residentDTO);
+        resident.setId(residentId);
+
+        residentRepository.updateResident(resident);
+    }
+
+    private Resident getResidentWithFilledCityAndLanguage(ResidentDTO residentDTO) throws SQLException {
         var city = cityRepository.getCityById(residentDTO.cityId())
                 .orElseThrow(() -> {
                     log.info("City Entity not found with id -> {}", residentDTO.cityId());
@@ -44,13 +65,10 @@ public class ResidentService {
                     return new IllegalArgumentException("Language Entity not found");
                 });
 
-        var resident = Resident.builder().name(residentDTO.name())
+        return Resident.builder().name(residentDTO.name())
                 .city(city)
                 .language(language)
                 .build();
-        residentRepository.addResident(resident);
-
-
     }
 
 }

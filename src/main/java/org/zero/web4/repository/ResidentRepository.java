@@ -70,6 +70,27 @@ public class ResidentRepository {
         }
     }
 
+    public void deleteResident(Integer residentId) throws SQLException {
+        var statement = database.getConnection().prepareStatement("delete from resident where id = ?");
+        statement.setInt(1, residentId);
+
+
+        statement.executeUpdate();
+        log.info("Successfully deleted entity with id -> {}", residentId);
+        statement.close();
+    }
+
+    public void updateResident(Resident resident) throws SQLException {
+        var statement = database.getConnection().prepareStatement("update resident set name = ?, language = ?, city = ? where id = ?");
+        statement.setString(1, resident.getName());
+        statement.setInt(2, resident.getLanguage().getId());
+        statement.setInt(3, resident.getCity().getId());
+        statement.setInt(4, resident.getId());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
     public void addResident(Resident resident) throws SQLException {
         var statement = database.getConnection()
                 .prepareStatement("insert into resident(name, city, language) values(?, ?, ?)");
